@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-// import { Container } from './styles';
 import { formatDate } from '../../utils';
 import { changeStatusRequest } from '../../store/modules/status/actions';
 
