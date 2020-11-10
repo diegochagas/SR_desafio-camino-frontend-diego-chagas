@@ -6,7 +6,7 @@
 	"scripts": {
 		"start": "npm run start:api | npm run start:app",
 		"start:app": "webpack-dev-server --mode development --open",
-		"start:api": "node api-server.js",
+		"start:api": "node api-server.js"
 	},
 	"babel": {
 		"presets": [

@@ -10,6 +10,8 @@ function Home() {
     const devices = useSelector(state => state.devices);
     const status = useSelector(state => state.status);
     const [showMessage, setShowMessage] = useState(false);
+    const [searchValue, setSearchValue] = useState('');
+    const [devicesList, setDevicesList] = useState([]);
 
     async function getDevices() {
         await dispatch(fetchDevicesRequest());   
@@ -29,6 +31,20 @@ function Home() {
         }
     }, [showMessage]);
 
+    useEffect(() => {
+        if (!devices.isLoading && devices.data) {
+            setDevicesList(devices.data);
+        }
+    }, [devices.data]);
+
+    const handleSearch = value => {
+        setSearchValue(value);
+
+        setDevicesList(devices.data.filter(device => {
+            return device.name.toLowerCase().includes(value.toLowerCase())
+        }));
+    }
+
     return (
         <Container>
             {showMessage && (
@@ -40,15 +56,43 @@ function Home() {
             {devices.isLoading && <div className="loading"><progress /></div>}
 
             {!devices.isLoading && devices.data && (
-                <div className="devices">
-                    {devices.data.map(device => (
-                        <Device
-                            key={device.unit}
-                            device={device}
-                            showMessage={setShowMessage}
-                        />
-                    ))}
-              </div>
+                <>
+                    <div className="counter">
+                        <span>Actived devices: </span>
+
+                        <b>
+                            {devices.data.reduce((actives, device) => {
+                                if (device.active) actives++;
+
+                                return actives;
+                            }, 0)}
+                        </b>
+                    </div>
+
+                    <input
+                        className="form-control"
+                        type="text"
+                        placeholder="Search device..."
+                        value={searchValue}
+                        onChange={event => handleSearch(event.target.value)}
+                    />
+
+                    <div className="devices">
+                        {devicesList.length > 0 && devicesList.map(device => (
+                            <Device
+                                key={device.unit}
+                                device={device}
+                                showMessage={setShowMessage}
+                            />
+                        ))}
+
+                        {devicesList.length === 0 && (
+                            <div class="alert alert-light" role="alert">
+                                Device not found
+                            </div>
+                        )} 
+                </div>
+              </>
             )}
         </Container>
     );

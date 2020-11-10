@@ -15,6 +15,10 @@ export const Container = styled.div`
         margin-top: 30px;
     }
 
+    .counter {
+        margin: 20px 0;
+    }
+
     .devices {
         display: flex;
         flex-wrap: wrap;
